@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Личная карточка студента</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles/gradient2.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.js}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/imask" crossorigin=""></script>
+</head>
+<body class="container-fluid d-flex flex-column">
+<div>
+    <p class="fw-bold fs-5 text-primary" style="margin-left:1em">Личная карточка студента</p>
+    <div class="container-fluid d-flex flex-column pb-5 border border-5 border-primary" style="border-radius: 0.5rem;">
+        <div th:insert="header/BackHeader"></div>
+        <form th:action="@{/student/update}" th:object="${student}" method="post" enctype="multipart/form-data" name="studentForm">
+            <div id="imageBtn" onclick="document.getElementById('imageFile').click();">
+                <img height="100px" width="100px" style="cursor: pointer" alt="" th:if="${student.image!=null}" th:src="'/image/' + ${student.image.idImage}"/>
+                <img height="100px" width="100px" style="cursor: pointer" alt="" th:unless="${student.image!=null}" th:src="@{/images/unknown.avif}"/>
+            </div>
+            <input id="imageFile" name="imageFile" accept="image/png, image/jpg, image/jpeg" type="file" value="upload" style='height: 0px;width: 0px; overflow:hidden;'
+                   onchange="updateImage(this)"/>
+            <input type="hidden" th:field="*{idStudent}">
+            <input type="hidden" th:field="*{email}">
+            <input type="hidden" th:field="*{password}">
+            <input type="hidden" th:field="*{group.idGroup}">
+            <input type="hidden" th:field="*{image}">
+            <input type="hidden" th:field="*{rusLang}">
+            <input type="hidden" th:field="*{math}">
+            <input type="hidden" th:field="*{physEducation}">
+            <input type="hidden" th:field="*{literature}">
+            <input type="hidden" th:field="*{natLiterature}">
+            <input type="hidden" th:field="*{engLang}">
+            <input type="hidden" th:field="*{history}">
+            <input type="hidden" th:field="*{socialStudies}">
+            <input type="hidden" th:field="*{informatics}">
+            <input type="hidden" th:field="*{physics}">
+            <input type="hidden" th:field="*{astronomy}">
+            <input type="hidden" th:field="*{OBJ}">
+            <input type="hidden" th:field="*{OPD}">
+            <label class="fw-bold fs-5 text-primary"> Фамилия:
+                <input type="text" class="form-control" th:field="*{surname}">
+            </label>
+            <div class="error text-danger" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+            <label class="fw-bold fs-5 text-primary"> Имя:
+                <input type="text" class="form-control" th:field="*{name}">
+            </label>
+            <div class="error text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <label class="fw-bold fs-5 text-primary">Отчество:
+                <input type="text" class="form-control" th:field="*{patronymic}">
+            </label>
+            <div class="error text-danger" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></div>
+            </p>
+            <label class="fw-bold fs-5 text-primary">Номер телефона:
+                <input type="text" class="form-control" th:field="*{phoneNumber}" data-mask="phoneNumber">
+            </label>
+            <div class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+            <label class="fw-bold fs-5 text-primary"> Электронная почта родителя:
+                <input type="text" class="form-control" th:field="*{parentEmail}">
+            </label>
+            <div class="text-danger" th:if="${#fields.hasErrors('parentEmail')}" th:errors="*{parentEmail}"></div>
+            <input class="btn btn-purple" type="submit" value="Обновить данные">
+        </form>
+        </p>
+        <form th:if="${student.parentEmail!=null}">
+            <input class="btn btn-warning-light" type="button" value="Отправить письмо" id="showAlert">
+        </form>
+        <div class="alert alert-light alert-dismissable" style="display: none">
+            <div class="fw-bold fs-5 d-flex flex-column align-items-center pb-5">
+                <label class="text-primary">Введите комментарий:</label>
+                <form th:action="@{/sendEmail}" method="post">
+                    <div class="mb-2">
+                        <input type="text" name="textEmail" class="form-control"/>
+                        <input type="hidden" name="student" th:value="${student.idStudent}"/>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <input type="submit" value="Подтвердить" class="btn btn-secondary"/>
+                        <a class="btn btn-secondary" id="hideAlert">Отмена</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <h3 class="fw-bold fs-5 d-flex flex-column align-items-center pb-5">Оценки</h3>
+        <form th:action="@{/student/updateMarks}" th:object="${student}" method="post">
+            <input type="hidden" th:field="*{idStudent}">
+            <input type="hidden" th:field="*{parentEmail}">
+            <input type="hidden" th:field="*{email}">
+            <input type="hidden" th:field="*{password}">
+            <input type="hidden" th:field="*{group.idGroup}">
+            <input type="hidden" th:field="*{image}">
+            <input type="hidden" th:field="*{name}">
+            <input type="hidden" th:field="*{surname}">
+            <input type="hidden" th:field="*{patronymic}">
+            <input type="hidden" th:field="*{phoneNumber}">
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Русский язык:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{rusLang}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Высшая математика:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{math}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Физическая культура:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{physEducation}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Литература:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{literature}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Родная литература:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{natLiterature}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em"> Иностранный язык:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{engLang}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">История:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{history}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Обществознание:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{socialStudies}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Информатика:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{informatics}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Физика:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{physics}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Астрономия:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{astronomy}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Основы безопасности жизнедеятельности:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{OBJ}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="row justify-content-md-start">
+                <div class="col-6 col-sm-2">
+                    <p class="fw-bold fs-6 text-primary" style="margin-left:2em">Основы проектной деятельности:</p>
+                </div>
+                <div class="col-1 col-sm-1">
+                    <select th:field="*{OPD}" class="form-control text-center">
+                        <option th:value="${0}">н/a</option>
+                        <option th:value="${2}" th:text="2"/>
+                        <option th:value="${3}" th:text="3"/>
+                        <option th:value="${4}" th:text="4"/>
+                        <option th:value="${5}" th:text="5"/>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group pt-1 d-flex justify-content-center">
+                <input class="btn btn-purple" type="submit" value="Обновить оценки">
+            </div>
+        </form>
+        <form th:action="@{/export}">
+            <div class="form-group pt-1 d-flex justify-content-center">
+                <input class="btn btn-purple-dark" type="submit" value="Экспорт данных">
+                <input type="hidden" name="student" th:value="${student.idStudent}">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    $("#showAlert").click(function () {
+        $(".alert").hide().show('medium');
+    });
+</script>
+<script>
+    $("#hideAlert").click(function () {
+        $(".alert").show().hide('medium');
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const mask = (dataValue, options) => {
+            const elements = document.querySelectorAll(`[data-mask="${dataValue}"]`)
+            if (!elements) return
+            elements.forEach(el => {
+                IMask(el, options)
+            })
+        }
+        mask('phoneNumber', {
+            mask: '+{7}(000)000-00-00'
+        })
+    })
+</script>
+<script>
+    function updateImage(obj) {
+        if(obj.files[0].size > 3145728){
+            alert("Размер файла превышает 3МБ");
+            this.value = "";
+            return;
+        }
+        const file = obj.value;
+        const fileName = file.split("\\");
+        document.getElementById("imageBtn").innerHTML = fileName[fileName.length - 1];
+        document.studentForm.submit();
+        event.preventDefault();
+    }
+</script>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Личная карточка студента</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/styles/gradient2.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.js}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container-fluid d-flex flex-column">
+    <p class="fw-bold fs-5 text-primary" style="margin-left:1em">Личная карточка студента</p>
+    <div class="container-fluid d-flex flex-column pb-5 border border-5 border-primary" style="border-radius: 0.5rem;">
+        <div th:insert="header/StudentHeader"></div>
+        <div>
+            <img height="100px" width="100px" alt="" th:if="${student.image!=null}" th:src="'/image/' + ${student.image.idImage}"/>
+            <img height="100px" width="100px" alt="" th:unless="${student.image!=null}" th:src="@{/images/unknown.avif}"/>
+        </div>
+        <p class="fw-normal fs-6 text-primary">
+            <span class="fw-bold fs-5" th:text="${student.name}"></span>
+            <span class="fw-bold fs-5" th:if="${student.patronymic!=null}" th:text="${student.patronymic}"></span>
+            <span class="fw-bold fs-5" th:text="${student.surname}"></span>
+        </p>
+        <p class="fw-bold fs-5 text-primary">
+            Электронная почта: <a th:text="${student.email}"></a>
+        </p>
+        <p class="fw-bold fs-5 text-primary">
+            Номер телефона: <a th:if="${student.phoneNumber!=null}" th:text="${student.phoneNumber}"></a>
+            <a th:if="${student.parentEmail==null}" th:text="Отсутсвует"></a>
+        </p>
+        <p class="fw-bold fs-5 text-primary">
+            Номер группы: <a th:text="${student.group.groupName}"></a>
+        </p>
+        <h3 class="fw-bold fs-5 d-flex flex-column align-items-center pb-5 text-primary">Оценки</h3>
+        <div class="row">
+            <div class="col">
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Русский язык: <a th:if="${student.rusLang!=0}" th:text="${student.rusLang}"></a>
+                    <a th:if="${student.rusLang==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Высшая математика: <a th:if="${student.math!=0}" th:text="${student.math}"></a>
+                    <a th:if="${student.math==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Физическая культура: <a th:if="${student.physEducation!=0}" th:text="${student.physEducation}"></a><a
+                        th:if="${student.physEducation==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Литература: <a th:if="${student.literature!=0}" th:text="${student.literature}"></a>
+                    <a th:if="${student.literature==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Родная литература: <a th:if="${student.natLiterature!=0}" th:text="${student.natLiterature}"></a>
+                    <a th:if="${student.natLiterature==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Иностранный язык: <a th:if="${student.engLang!=0}" th:text="${student.engLang}"></a>
+                    <a th:if="${student.engLang==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    История: <a th:if="${student.history!=0}" th:text="${student.history}"></a>
+                    <a th:if="${student.history==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Обществознание: <a th:if="${student.socialStudies!=0}" th:text="${student.socialStudies}"></a>
+                    <a th:if="${student.socialStudies==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Информатика: <a th:if="${student.informatics!=0}" th:text="${student.informatics}"></a>
+                    <a th:if="${student.informatics==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Физика: <a th:if="${student.physics!=0}" th:text="${student.physics}"></a>
+                    <a th:if="${student.physics==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Астрономия: <a th:if="${student.astronomy!=0}" th:text="${student.astronomy}"></a>
+                    <a th:if="${student.astronomy==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Основы безопасности жизнедеятельности: <a th:if="${student.OBJ!=0}" th:text="${student.OBJ}"></a>
+                    <a th:if="${student.OBJ==0}">н/а</a>
+                </p>
+                <p class="fw-bold fs-6 text-primary" style="margin-left:2em">
+                    Основы проектной деятельности: <a th:if="${student.OPD!=0}" th:text="${student.OPD}"></a>
+                    <a th:if="${student.OPD==0}">н/а</a>
+                </p>
+            </div>
+            <div class="col">
+                <div class="rounded-lg overflow-hidden" style="width: 75%; height: 75%">
+                    <canvas id="chartDoughnut"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    var marks = /*[[${marks}]]*/;
+    var markTypes = /*[[${markTypes}]]*/;
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const dataDoughnut = {
+        labels: markTypes,
+        datasets: [
+            {
+                label: "Количество оценок",
+                data: marks,
+                hoverOffset: 4,
+            },
+        ],
+    };
+    const configDoughnut = {
+        type: "doughnut",
+        data: dataDoughnut,
+        options: {},
+    };
+    var chartBar = new Chart(
+        document.getElementById("chartDoughnut"),
+        configDoughnut
+    );
+</script>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.js}">
+</head>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
+        <label class="error text-danger" th:if="${errorText!=null}" th:text="${errorText}"></label>
+        <label class="error text-primary" th:if="${successText!=null}" th:text="${successText}"></label>
+        <div class="container-fluid d-flex flex-column align-items-end justify-content-end">
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                <ul class="navbar-nav flex-grow-1"></ul>
+                <div class="nav-link">
+                    <form method="post" enctype="multipart/form-data" th:action="@{/importMarks}" name="marksForm">
+                        <input class="btn btn-salad" value="Импорт оценок" id="marksBtn" onclick="document.getElementById('marksFile').click();">
+                        <div style='height: 0px;width: 0px; overflow:hidden;'><input id="marksFile" name="marksFile" value="upload" onchange="updateMarks(this)" type="file"
+                                                                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></div>
+                    </form>
+                </div>
+                <div class="nav-link">
+                    <form method="post" enctype="multipart/form-data" th:action="@{/importStudents}" name="studentsForm">
+                        <input class="btn btn-salad" value="Импорт студентов" id="studentsBtn" onclick="document.getElementById('studentsFile').click();">
+                        <div style='height: 0px;width: 0px; overflow:hidden;'><input id="studentsFile" name="studentsFile" value="upload" onchange="updateStudents(this)" type="file"
+                                                                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></div>
+                    </form>
+                </div>
+                <div class="nav-link">
+                    <form method="post" enctype="multipart/form-data" th:action="@{/importGroups}" name="groupsForm">
+                        <input class="btn btn-salad" value="Импорт групп" id="groupsBtn" onclick="document.getElementById('groupsFile').click();">
+                        <div style='height: 0px;width: 0px; overflow:hidden;'><input id="groupsFile" name="groupsFile" value="upload" onchange="updateGroups(this)" type="file"
+                                                                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/></div>
+                    </form>
+                </div>
+                <div class="nav-link">
+                    <input class="btn btn-warning-light" type="submit" value="Отправка писем родителям" id="showAlert">
+                </div>
+                <div class="nav-link">
+                    <form th:action="@{/logout}" method="post">
+                        <input class="btn btn-danger-light" type="submit" value="Выход">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+<script>
+    function updateMarks(obj) {
+        const file = obj.value;
+        const fileName = file.split("\\");
+        document.getElementById("marksBtn").innerHTML = fileName[fileName.length - 1];
+        document.marksForm.submit();
+        event.preventDefault();
+    }
+</script>
+<script>
+    function updateStudents(obj) {
+        const file = obj.value;
+        const fileName = file.split("\\");
+        document.getElementById("studentsBtn").innerHTML = fileName[fileName.length - 1];
+        document.studentsForm.submit();
+        event.preventDefault();
+    }
+</script>
+<script>
+    function updateGroups(obj) {
+        const file = obj.value;
+        const fileName = file.split("\\");
+        document.getElementById("groupsBtn").innerHTML = fileName[fileName.length - 1];
+        document.groupsForm.submit();
+        event.preventDefault();
+    }
+</script>
+</html>

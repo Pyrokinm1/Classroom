@@ -1,0 +1,10 @@
+body {
+    background-image: url("/static/images/reu.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100%;
+}
+
+html, .container-fluid {
+    height: 100%;
+}

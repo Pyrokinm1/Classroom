@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.css}">
+    <link media="all" rel="stylesheet" th:href="@{/styles/bootstrap.js}">
+</head>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong">
+        <div class="container-fluid d-flex flex-column align-items-end justify-content-end">
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                <ul class="navbar-nav flex-grow-1"></ul>
+                <div>
+                    <form th:action="@{/group/index}" method="post">
+                        <input class="btn btn-secondary" type="submit" value="Назад">
+                    </form>
+                </div>
+                <img th:src="@{/images/mptLogo.png}" alt="" style="width: 75px; height: 75px"/>
+            </div>
+        </div>
+    </nav>
+</header>
+</html>
